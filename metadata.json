@@ -1,0 +1,6 @@
+{
+  "name": "ClearAir Civic",
+  "description": "GenAI-powered winter smog and urban air pollution assistant offering tailored low-emission routines, indoor air quality hacks, impact explanations, and real-time fluctuation alerts.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
