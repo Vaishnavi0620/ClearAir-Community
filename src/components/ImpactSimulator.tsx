@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Users } from 'lucide-react';
 import type { ActionRecommendation } from '../types/air';
+import { computeHouseholdImpact } from '../utils/impactMath';
 
 interface ImpactSimulatorProps {
   recommendations: ActionRecommendation[];
@@ -17,30 +18,14 @@ export function ImpactSimulator({
 }: ImpactSimulatorProps) {
   const [participatingHouseholds, setParticipatingHouseholds] = useState(25);
 
-  const adoptedItems = recommendations.filter((r) => adoptedIds.includes(r.id));
-
-  const totalExposureAvoidedUg = adoptedItems.reduce(
-    (sum, item) => sum + (Number(item.estimatedExposureAvoidedUg) || 0),
-    0
-  );
-
-  // Cap effective inhaled reduction at 85% of ambient PM2.5 for physical realism
-  const effectiveExposureReductionUg = Math.min(
-    totalExposureAvoidedUg,
-    Math.max(currentPm25 * 0.85, 5)
-  );
-  const pctExposureReduction =
-    currentPm25 > 0
-      ? Math.min(85, Math.round((effectiveExposureReductionUg / currentPm25) * 100))
-      : 0;
-
-  const weeklyCo2PerHousehold = adoptedItems.reduce(
-    (sum, item) => sum + (Number(item.estimatedWeeklyCo2KgSaved) || 0),
-    0
-  );
-  const communityWeeklyCo2 = weeklyCo2PerHousehold * participatingHouseholds;
-  // Approximate winter urban co-pollutant co-benefit: ~1.4 g NOx + primary PM2.5 per kg CO2e avoided in cold-start traffic/heating
-  const communityWeeklyAirshedGrams = Number((communityWeeklyCo2 * 1.4).toFixed(0));
+  const {
+    adoptedItems,
+    effectiveExposureReductionUg,
+    pctExposureReduction,
+    weeklyCo2PerHousehold,
+    communityWeeklyCo2,
+    communityWeeklyAirshedGrams,
+  } = computeHouseholdImpact(recommendations, adoptedIds, currentPm25, participatingHouseholds);
 
   return (
     <section id="impact" className="rounded-xl border border-slate-200 bg-white">
@@ -58,13 +43,10 @@ export function ImpactSimulator({
       </div>
 
       <div className="grid grid-cols-1 divide-y divide-slate-200 lg:grid-cols-12 lg:divide-x lg:divide-y-0">
-        {/* Left: Household & Community Totals */}
         <div className="p-6 lg:col-span-7">
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
             <div>
-              <span className="block text-xs font-medium text-slate-500">
-                Daily Exposure Avoided
-              </span>
+              <span className="block text-xs font-medium text-slate-500">Daily Exposure Avoided</span>
               <div className="mt-1 flex items-baseline gap-1.5">
                 <span className="font-mono text-3xl font-semibold text-teal-800 tabular-nums">
                   {effectiveExposureReductionUg.toFixed(1)}
@@ -77,9 +59,7 @@ export function ImpactSimulator({
             </div>
 
             <div>
-              <span className="block text-xs font-medium text-slate-500">
-                Your Weekly Carbon & Smoke Cut
-              </span>
+              <span className="block text-xs font-medium text-slate-500">Your Weekly Carbon & Smoke Cut</span>
               <div className="mt-1 flex items-baseline gap-1.5">
                 <span className="font-mono text-3xl font-semibold text-slate-900 tabular-nums">
                   {weeklyCo2PerHousehold.toFixed(1)}
@@ -92,9 +72,7 @@ export function ImpactSimulator({
             </div>
 
             <div>
-              <span className="block text-xs font-medium text-slate-500">
-                Neighborhood Block Effect
-              </span>
+              <span className="block text-xs font-medium text-slate-500">Neighborhood Block Effect</span>
               <div className="mt-1 flex items-baseline gap-1.5">
                 <span className="font-mono text-3xl font-semibold text-emerald-700 tabular-nums">
                   {communityWeeklyCo2.toFixed(0)}
@@ -107,7 +85,6 @@ export function ImpactSimulator({
             </div>
           </div>
 
-          {/* Community Multiplier Slider */}
           <div className="mt-6 border-t border-slate-200 pt-5">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <label htmlFor="community-scale" className="flex items-center gap-2 text-xs font-semibold text-slate-800">
@@ -136,7 +113,6 @@ export function ImpactSimulator({
           </div>
         </div>
 
-        {/* Right: Transparent Breakdown of Active Commitments */}
         <div className="p-6 lg:col-span-5 bg-slate-50/50">
           <h3 className="text-sm font-semibold text-slate-900">Why Every Committed Choice Matters</h3>
           {adoptedItems.length === 0 ? (
