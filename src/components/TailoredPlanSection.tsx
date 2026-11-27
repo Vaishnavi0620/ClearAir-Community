@@ -52,7 +52,11 @@ export function TailoredPlanSection({
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
-          <div className="flex items-center gap-1 rounded-lg bg-slate-100 p-1 overflow-x-auto">
+          <div
+            className="flex items-center gap-1 rounded-lg bg-slate-100 p-1 overflow-x-auto"
+            role="tablist"
+            aria-label="Guidance category filter"
+          >
             {[
               { id: 'all', label: 'All Guidance' },
               { id: 'routine', label: 'Daily Routines' },
@@ -62,6 +66,8 @@ export function TailoredPlanSection({
               <button
                 key={tab.id}
                 type="button"
+                role="tab"
+                aria-selected={activeCategory === tab.id}
                 onClick={() => setActiveCategory(tab.id as 'all' | RecommendationCategory)}
                 className={`rounded-md px-3 py-1.5 text-xs font-medium transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
                   activeCategory === tab.id
@@ -199,6 +205,7 @@ export function TailoredPlanSection({
                   <div className="mt-5 flex items-center justify-between gap-2 border-t border-slate-100 pt-3.5">
                     <button
                       type="button"
+                      aria-expanded={isExpanded}
                       onClick={() => toggleExpand(item.id)}
                       className="inline-flex items-center gap-1 text-xs font-medium text-slate-600 hover:text-slate-900 cursor-pointer"
                     >
@@ -212,6 +219,7 @@ export function TailoredPlanSection({
 
                     <button
                       type="button"
+                      aria-pressed={isAdopted}
                       onClick={() => onToggleAdopt(item.id)}
                       className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
                         isAdopted

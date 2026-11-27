@@ -235,6 +235,13 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#F6F8FA] text-slate-900">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-teal-800 focus:px-4 focus:py-2 focus:text-xs focus:font-semibold focus:text-white"
+      >
+        Skip to main content
+      </a>
+
       <TopNav
         onRefresh={() => fetchAirQuality(activeLocation, profile.alertThresholdAqi, true)}
         isRefreshing={airLoading || planLoading}
@@ -251,7 +258,7 @@ export default function App() {
         isGeneratingPlan={planLoading}
       />
 
-      <main className="mx-auto max-w-[1280px] space-y-6 px-6 py-6">
+      <main id="main-content" className="mx-auto max-w-[1280px] space-y-6 px-6 py-6">
         <AirTelemetryPanel
           data={airData}
           isLoading={airLoading}

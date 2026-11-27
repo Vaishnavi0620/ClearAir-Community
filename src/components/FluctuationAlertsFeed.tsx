@@ -56,7 +56,7 @@ export function FluctuationAlertsFeed({
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <div className="flex items-center gap-1 rounded-lg bg-slate-100 p-1">
+          <div className="flex items-center gap-1 rounded-lg bg-slate-100 p-1" role="group" aria-label="Alert refresh interval">
             {[
               { label: 'Manual', value: 0 },
               { label: '5m Poll', value: 5 },
@@ -65,6 +65,7 @@ export function FluctuationAlertsFeed({
               <button
                 key={opt.value}
                 type="button"
+                aria-pressed={autoRefreshMinutes === opt.value}
                 onClick={() => onChangeAutoRefresh(opt.value)}
                 className={`rounded-md px-2.5 py-1 text-xs font-medium transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
                   autoRefreshMinutes === opt.value
@@ -79,6 +80,7 @@ export function FluctuationAlertsFeed({
 
           <button
             type="button"
+            aria-pressed={notificationsEnabled}
             onClick={onToggleNotifications}
             className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
               notificationsEnabled
@@ -96,6 +98,7 @@ export function FluctuationAlertsFeed({
 
           <button
             type="button"
+            aria-pressed={Boolean(simulatedAlert)}
             onClick={handleToggleSimulation}
             className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
               simulatedAlert
@@ -109,6 +112,7 @@ export function FluctuationAlertsFeed({
         </div>
       </div>
 
+      <div aria-live="polite">
       {displayAlerts.length === 0 ? (
         <div className="px-6 py-8 text-center">
           <p className="text-sm font-medium text-slate-800">No abrupt air quality spikes detected</p>
@@ -168,6 +172,7 @@ export function FluctuationAlertsFeed({
           })}
         </div>
       )}
+      </div>
     </section>
   );
 }

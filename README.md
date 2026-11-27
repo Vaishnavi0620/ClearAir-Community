@@ -32,7 +32,14 @@ A full-stack GenAI-powered assistant that helps families and communities navigat
 ## Project Structure
 
 ```text
-├── server.ts                          # Express server, Open-Meteo telemetry, & server-side Gemini routes
+├── server.ts                          # Express app factory, routes, & Vite/static serving
+├── server/
+│   ├── airMetrics.ts                  # AQI classification, inversion risk, & alert engine
+│   └── geminiService.ts               # Gemini client, retry/fallback, & prompt/schema builders
+├── tests/
+│   ├── airMetrics.test.ts             # Unit tests for AQI, inversion, & alert calculations
+│   ├── geminiService.test.ts          # Unit tests for Gemini error parsing & fallback logic
+│   └── apiRoutes.test.ts              # Express endpoint validation & header integration tests
 ├── index.html                         # HTML entry point & Google Fonts
 ├── package.json
 ├── .env.example                       # Required environment variable template
@@ -95,6 +102,7 @@ A full-stack GenAI-powered assistant that helps families and communities navigat
 | `npm run build` | Builds the production frontend bundle into `dist/` |
 | `npm run start` | Runs the production server (`node server.ts`) serving `dist/` |
 | `npm run lint` | Runs TypeScript type checking (`tsc --noEmit`) |
+| `npm test` | Runs automated unit and API integration tests (`tsx --test tests/*.test.ts`) |
 
 ## Backend API Endpoints
 

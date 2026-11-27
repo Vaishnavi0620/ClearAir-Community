@@ -152,7 +152,11 @@ export function LocationAndProfileBar({
               </div>
 
               {showDropdown && (results.length > 0 || isSearching) && (
-                <div className="absolute left-0 right-0 top-full z-40 mt-1.5 max-h-64 overflow-y-auto rounded-lg border border-slate-200 bg-white shadow-lg">
+                <div
+                  role="listbox"
+                  aria-label="Matching cities"
+                  className="absolute left-0 right-0 top-full z-40 mt-1.5 max-h-64 overflow-y-auto rounded-lg border border-slate-200 bg-white shadow-lg"
+                >
                   {isSearching ? (
                     <div className="px-3.5 py-2.5 text-xs text-slate-500">Searching locations...</div>
                   ) : (
@@ -160,6 +164,8 @@ export function LocationAndProfileBar({
                       <button
                         key={item.id}
                         type="button"
+                        role="option"
+                        aria-selected={item.id === activeLocation.id}
                         onClick={() => {
                           onSelectLocation(item);
                           setQuery('');
@@ -199,6 +205,7 @@ export function LocationAndProfileBar({
                   <button
                     key={preset.id}
                     type="button"
+                    aria-pressed={isActive}
                     onClick={() => onSelectLocation(preset)}
                     className={`rounded-md px-2.5 py-1 font-medium transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
                       isActive
@@ -232,6 +239,8 @@ export function LocationAndProfileBar({
 
             <button
               type="button"
+              aria-expanded={showProfileEditor}
+              aria-controls="household-profile-panel"
               onClick={() => setShowProfileEditor((prev) => !prev)}
               className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-800 hover:bg-slate-50 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
             >
@@ -249,7 +258,7 @@ export function LocationAndProfileBar({
 
         {/* Expandable Household & Lifestyle Configurator */}
         {showProfileEditor && (
-          <div className="mt-4 border-t border-slate-200 pt-4">
+          <div id="household-profile-panel" className="mt-4 border-t border-slate-200 pt-4">
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
               <div>
                 <label htmlFor="prof-household" className="block text-xs font-semibold text-slate-700 mb-1.5">

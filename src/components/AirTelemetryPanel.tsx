@@ -231,9 +231,10 @@ export function AirTelemetryPanel({ data, isLoading, error, onRetry }: AirTeleme
               </p>
             </div>
 
-            <div className="flex items-center gap-1 rounded-lg bg-slate-100 p-1">
+            <div className="flex items-center gap-1 rounded-lg bg-slate-100 p-1" role="group" aria-label="Forecast metric">
               <button
                 type="button"
+                aria-pressed={metricMode === 'aqi'}
                 onClick={() => setMetricMode('aqi')}
                 className={`rounded-md px-2.5 py-1 text-xs font-medium transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
                   metricMode === 'aqi' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-600 hover:text-slate-900'
@@ -243,6 +244,7 @@ export function AirTelemetryPanel({ data, isLoading, error, onRetry }: AirTeleme
               </button>
               <button
                 type="button"
+                aria-pressed={metricMode === 'pm25'}
                 onClick={() => setMetricMode('pm25')}
                 className={`rounded-md px-2.5 py-1 text-xs font-medium transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
                   metricMode === 'pm25' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-600 hover:text-slate-900'
@@ -257,10 +259,21 @@ export function AirTelemetryPanel({ data, isLoading, error, onRetry }: AirTeleme
           <div className="mt-4">
             <svg
               viewBox={`0 0 ${width} ${height}`}
-              className="w-full h-auto cursor-crosshair select-none overflow-visible"
+              tabIndex={0}
+              className="w-full h-auto cursor-crosshair select-none overflow-visible focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-teal-700 rounded-md"
               role="img"
-              aria-label="24-hour localized air quality forecast chart"
+              aria-label="24-hour localized air quality forecast chart. Use Left and Right arrow keys to inspect hourly points."
               onMouseLeave={() => setHoverIdx(null)}
+              onKeyDown={(e) => {
+                if (hourly.length === 0) return;
+                if (e.key === 'ArrowRight') {
+                  e.preventDefault();
+                  setHoverIdx((prev) => (prev === null ? 0 : Math.min(hourly.length - 1, prev + 1)));
+                } else if (e.key === 'ArrowLeft') {
+                  e.preventDefault();
+                  setHoverIdx((prev) => (prev === null ? hourly.length - 1 : Math.max(0, prev - 1)));
+                }
+              }}
             >
               {/* Horizontal Reference Grid Lines */}
               {[0.25, 0.5, 0.75, 1].map((ratio) => {

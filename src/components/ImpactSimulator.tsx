@@ -124,6 +124,7 @@ export function ImpactSimulator({
               min={1}
               max={150}
               value={participatingHouseholds}
+              aria-valuetext={`${participatingHouseholds} participating households`}
               onChange={(e) => setParticipatingHouseholds(Number(e.target.value))}
               className="mt-3 w-full accent-teal-700 cursor-pointer"
             />

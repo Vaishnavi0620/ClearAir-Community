@@ -105,6 +105,7 @@ export function SmogAdvisorChat({ airData, profile }: SmogAdvisorChatProps) {
 
         <button
           type="button"
+          aria-pressed={useSearchGrounding}
           onClick={() => setUseSearchGrounding((prev) => !prev)}
           className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
             useSearchGrounding
@@ -133,7 +134,7 @@ export function SmogAdvisorChat({ airData, profile }: SmogAdvisorChatProps) {
       </div>
 
       {/* Message Thread */}
-      <div className="max-h-[420px] overflow-y-auto divide-y divide-slate-100 px-6 py-2">
+      <div aria-live="polite" className="max-h-[420px] overflow-y-auto divide-y divide-slate-100 px-6 py-2">
         {messages.map((msg) => (
           <div key={msg.id} className="py-4">
             <div className="flex items-center gap-2 text-xs text-slate-500">
